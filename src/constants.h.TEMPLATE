@@ -1,0 +1,53 @@
+/**
+ * @file constants.h
+ * @author José Ángel Sánchez (https://github.com/gelanchez)
+ * @brief Constants used along the program.
+ * @version 0.0.3
+ * @date 2020-09-20
+ * @copyright GPL-3.0
+ */
+
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+#include <WiFi.h>
+
+/**
+ * @brief Constants
+ */
+namespace Constants
+{
+    // ESP32 constants
+    const uint16_t resolution(4095);  // Max analog value
+    const float maxVoltage(3.3);  // Max voltage
+
+    // WiFI parameters (TO BE MODIFIED)
+    const char ssid[] = "SSID";
+    const char password[] = "PASSWORD";
+    const IPAddress ip(192, 168, 0, 190);
+    const IPAddress gateway(192, 168, 0, 1);
+    const IPAddress subnet(255, 255, 255, 0); 
+
+    // LED
+    const uint8_t ledPin(4);
+
+    // Thermistor MF52A
+    const uint8_t thermistorPin(18);  // Connected through a voltage divider
+    const uint16_t beta(3950);
+    const uint16_t resitanceTherm(1000);  // 1 kohm
+    const float parameterB(3950);  // Simplified B parameter equation from Steinhart-Hart equation
+    const float parameterR0(23000);
+
+    // Photoresistor
+    const uint8_t photoresistorPin(22);  // Connected through a voltage divider
+    const uint16_t resistancePhoto(10000);  // 10 kohm
+    const float minResistance(1);
+    const float parameter1(-1.430677);
+    const float parameter2(25428013);
+
+    // Values to smooth the readings
+    const uint8_t iterations(5);
+    const uint8_t numReadings(3);  // Smoothing https://www.arduino.cc/en/tutorial/smoothing
+}
+
+#endif

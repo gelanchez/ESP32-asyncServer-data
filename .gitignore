@@ -1,0 +1,19 @@
+# KDE
+.directory
+
+# VSCode configuration files
+.vscode/
+*.code-workspace
+
+# Compiled files
+build/
+
+# Documentation
+doc/
+
+# Constants file containing passwords
+src/constants.h
+
+# Other
+INFO.md
+old/
