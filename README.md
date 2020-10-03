@@ -7,7 +7,7 @@ Apart from the Async server and websockets, the following technologies are used:
 - [Bootstrap](https://getbootstrap.com/), the CSS framework, decorates the webpages.
 
 ## Schematic
-The following parts have been used in the electronic circuit. Nevertheless, they can be replaced for other similar ones with little change in the code.
+The following parts have been used in the electronic circuit. Nevertheless, they can be replaced by other similar ones with little change in the code.
 - 1x LED.
 - 1x MF52D NTC thermistor.
 - 1x photoresistor.
@@ -16,6 +16,7 @@ The following parts have been used in the electronic circuit. Nevertheless, they
 
 <img src="./ESP32-web-data_schem.svg" alt="Electrical schematic" width="100%" height="auto">
 ESP32 pins in the schematic are referred as 3.3V, GND and D*.
+Note: ESP32 ADC2 pins cannot be used when Wi-Fi is used.
 
 ## Requirements
 ESP32 libraries:

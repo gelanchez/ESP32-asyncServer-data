@@ -33,6 +33,7 @@ void setup()
     delay(1000);
 
     pinMode(Constants::ledPin, OUTPUT);
+    pinMode(Constants::photoresistorPin, INPUT);
 
     /**
      * @brief Connect to WiFi.
@@ -63,15 +64,15 @@ void setup()
 
 void loop()
 {
-    if ((millis() - g_lastUpdate) > 5000)
+    if ((millis() - g_lastUpdate) > 2000)
     {
         g_lastUpdate = millis();
 
         g_doc["illuminance"] = g_photoresistor.read();
         g_doc["temperature"] = g_thermistor.read();
 
-        serializeJson(g_doc, Serial);
-        Serial.println();
+        //serializeJson(g_doc, Serial);
+        Serial.println(analogRead(Constants::photoresistorPin));
 
         //String output;
         //serializeJson(g_doc, output);
