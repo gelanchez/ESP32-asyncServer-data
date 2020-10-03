@@ -10,10 +10,18 @@
 
 #define ESP32
 #include <Arduino.h>
+#include <ArduinoJson.h>
 #include <AsyncTCP.h>
-#include <ESPAsyncWebServer.h>
 #include "constants.h"
+#include <ESPAsyncWebServer.h>
+#include "index.h"  // HTML webpage contents with javascripts
+#include "mysensors.h"
 #include <WiFi.h>
+
+Photoresistor g_photoresistor(Constants::photoresistorPin);
+Thermistor g_thermistor(Constants::thermistorPin);
+
+StaticJsonDocument<150> g_doc;
 
 AsyncWebServer g_server(80);
 
@@ -39,11 +47,14 @@ void setup()
     /**
      * @brief Server setup.
      */
+    g_server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+        request->send_P(200, "text/html", MAIN_page);
+        });
     g_server.on("/hello", HTTP_GET, [](AsyncWebServerRequest *request){
-        request->send(200, "text/plain", "Hello async");
+        request->send(200, "text/plain", "Hello world");
         });
     g_server.onNotFound([](AsyncWebServerRequest *request){
-        request->send(404, "text/plain", "Not found async");
+        request->send(404, "text/plain", "Not found");
     });
     g_server.begin();
 }
