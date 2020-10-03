@@ -29,17 +29,17 @@ namespace Constants
     const IPAddress subnet(255, 255, 255, 0); 
 
     // LED
-    const uint8_t ledPin(4);
+    const uint8_t ledPin(23);
 
     // Thermistor MF52A
-    const uint8_t thermistorPin(18);  // Connected through a voltage divider
+    const uint8_t thermistorPin(4);  // Connected through a voltage divider
     const uint16_t beta(3950);
     const uint16_t resitanceTherm(1000);  // 1 kohm
     const float parameterB(3950);  // Simplified B parameter equation from Steinhart-Hart equation
     const float parameterR0(23000);
 
     // Photoresistor
-    const uint8_t photoresistorPin(22);  // Connected through a voltage divider
+    const uint8_t photoresistorPin(15);  // Connected through a voltage divider
     const uint16_t resistancePhoto(10000);  // 10 kohm
     const float minResistance(1);
     const float parameter1(-1.430677);

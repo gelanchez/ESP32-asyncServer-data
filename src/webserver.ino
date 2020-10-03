@@ -25,6 +25,8 @@ StaticJsonDocument<150> g_doc;
 
 AsyncWebServer g_server(80);
 
+static unsigned long g_lastUpdate = millis();
+
 void setup()
 {
     Serial.begin(115200);
@@ -61,4 +63,17 @@ void setup()
 
 void loop()
 {
+    if ((millis() - g_lastUpdate) > 5000)
+    {
+        g_lastUpdate = millis();
+
+        g_doc["illuminance"] = g_photoresistor.read();
+        g_doc["temperature"] = g_thermistor.read();
+
+        serializeJson(g_doc, Serial);
+        Serial.println();
+
+        //String output;
+        //serializeJson(g_doc, output);
+    }
 }
