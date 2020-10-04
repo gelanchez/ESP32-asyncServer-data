@@ -24,8 +24,22 @@ Thermistor g_thermistor(Constants::thermistorPin);
 StaticJsonDocument<150> g_doc;
 
 AsyncWebServer g_server(80);
+AsyncWebSocket g_ws("/ws");
 
 static unsigned long g_lastUpdate = millis();
+
+void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len){
+    if(type == WS_EVT_CONNECT)
+    {
+        Serial.println("Websocket client connection received");
+    }
+    else if(type == WS_EVT_DISCONNECT)
+    {
+        Serial.println("Client disconnected");
+    }
+    else if(type == WS_EVT_DATA)
+        Serial.println("Data received: ");
+}
 
 void setup()
 {
@@ -59,6 +73,10 @@ void setup()
     g_server.onNotFound([](AsyncWebServerRequest *request){
         request->send(404, "text/plain", "Not found");
     });
+
+    g_ws.onEvent(onWsEvent);
+    g_server.addHandler(&g_ws);
+
     g_server.begin();
 }
 
@@ -71,10 +89,20 @@ void loop()
         g_doc["illuminance"] = g_photoresistor.read();
         g_doc["temperature"] = g_thermistor.read();
 
+        /**
+         * @brief Print values.
+         */
         //serializeJson(g_doc, Serial);
-        Serial.println(analogRead(Constants::photoresistorPin));
+        //Serial.println();
 
-        //String output;
-        //serializeJson(g_doc, output);
+        String output;
+        serializeJson(g_doc, output);
+        
+        //char charJson[output.length() + 1];
+        //output.toCharArray(charJson, output.length() + 1);
+            
+        g_ws.textAll(output);
+    
+        g_ws.cleanupClients();
     }
 }
