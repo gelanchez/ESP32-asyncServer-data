@@ -23,8 +23,8 @@ ESP32 libraries:
 - [WiFi.h](https://github.com/espressif/arduino-esp32/tree/master/libraries/WiFi)
 
 External libraries:
-- [AsyncTCP](https://github.com/me-no-dev/AsyncTCP). Async TCP Library for ESP32.
 - [ArduinoJson](https://arduinojson.org). JSON library for embedded C++.
+- [AsyncTCP](https://github.com/me-no-dev/AsyncTCP). Async TCP Library for ESP32.
 - [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer). Async HTTP and WebSocket Server.
 
 ## Usage

@@ -28,18 +28,7 @@ AsyncWebSocket g_ws("/ws");
 
 static unsigned long g_lastUpdate = millis();
 
-void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len){
-    if(type == WS_EVT_CONNECT)
-    {
-        Serial.println("Websocket client connection received");
-    }
-    else if(type == WS_EVT_DISCONNECT)
-    {
-        Serial.println("Client disconnected");
-    }
-    else if(type == WS_EVT_DATA)
-        Serial.println("Data received: ");
-}
+void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len);
 
 void setup()
 {
@@ -64,6 +53,7 @@ void setup()
     /**
      * @brief Server setup.
      */
+
     g_server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
         request->send_P(200, "text/html", MAIN_page);
         });
@@ -105,4 +95,25 @@ void loop()
     
         g_ws.cleanupClients();
     }
+}
+
+void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len)
+{
+    if(type == WS_EVT_CONNECT)
+    {
+        Serial.println("Websocket client connection received");
+    }
+    else if(type == WS_EVT_DISCONNECT)
+    {
+        Serial.println("Client disconnected");
+    }
+    else if(type == WS_EVT_DATA)
+    {
+        Serial.println("Data received: ");
+        for(int i=0; i < len; i++)
+        {
+            Serial.print((char) data[i]);
+        }
+        Serial.println();
+    } 
 }
