@@ -146,25 +146,34 @@ const char MAIN_page[] PROGMEM = R"=====(
             document.getElementById("temperature").innerHTML = temperature;
             document.getElementById("illuminance").innerHTML = illuminance;
         }
+        
+        var counter = 0;
 
         function updateCharts(temperature, illuminance) {
-
+            addData(temperatureChart, 1, [temperature]);
+            addData(illuminanceChart, 1, [illuminance]);
+            if (counter < 1000)
+                counter++;
+            else {
+                removeData(temperatureChart);
+                removeData(illuminanceChart); 
+            }   
         }
 
         function addData(chart, label, data) {
+            chart.data.labels.push(label);
             chart.data.datasets.forEach((dataset) => {
                 dataset.data.push(data);
             });
-            chart.data.labels.push(label);
             chart.update();
         }
 
         function removeData(chart)
         {
+            chart.data.labels.pop();
             chart.data.datasets.forEach((dataset) => {
-                dataset.data.shift();
+                dataset.data.pop();
             }); 
-            chart.data.labels.shift();
             chart.update();
         }
         
