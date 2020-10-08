@@ -59,12 +59,27 @@ const char MAIN_page[] PROGMEM = R"=====(
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
     <script>
         webSocket = new WebSocket("ws://10.42.0.190/ws");
-        webSocket.onmessage = function (event) {
+        webSocket.onmessage = function (event)
+        {
             let myObj = JSON.parse(event.data);
             let temp = myObj["temperature"];
             let illum = myObj["illuminance"];
-            console.log(temp, illum)
-            // updateValues(temp, illum);
+            updateValues(temp, illum);
+            updateCharts(temp, illum);
+        }
+
+        function updateValues(temperature, illuminance)
+        {
+            //temperature = Math.floor(Math.random() * 100); // Testing
+            //illuminance = Math.floor(Math.random() * 100); // Testing
+            document.getElementById("temperature").innerHTML = temperature;
+            document.getElementById("illuminance").innerHTML = illuminance;
+
+        }
+
+        function updateCharts(temperature, illuminance)
+        {
+            
         }
     </script>
 </body>
