@@ -2,19 +2,28 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
+    <title>ESP32-asyncServer-data</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="José Ángel">
+    <meta name="description" content="ESP32 async webserver data sensor, proof of concept">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
-    <title>Hello, world!</title>
 </head>
 
 <body>
-    <h1>Hello, world!</h1>
+    <h2>ESP32 data</h2>
+    <p>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lux</p>
+    <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+        <canvas id="temperatureChart" height="200" width="800" aria-label="Temperature chart" role="img"></canvas>
+    </div>
+    <br>
+    <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+        <canvas id="illuminanceChart" height="200" width="800" aria-label="Illuminance chart" role="img"></canvas>
+    </div>
+    <canvas id="myChart" width="400" height="400"></canvas>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -28,6 +37,19 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
         integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
         crossorigin="anonymous"></script>
+    
+    <!-- JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+    <script>
+        webSocket = new WebSocket("ws://10.42.0.190/ws");
+        webSocket.onmessage = function (event) {
+            let myObj = JSON.parse(event.data);
+            let temp = myObj["temperature"];
+            let illum = myObj["illuminance"];
+            console.log(temp, illum)
+            // updateValues(temp, illum);
+        }
+    </script>
 </body>
 
 </html>

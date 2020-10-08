@@ -32,7 +32,8 @@ External libraries:
 2. Install the standard ESP libraries either using the Arduino IDE or directly from [Espressif](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/).
 3. Install the required external libraries.
 4. Download the repository and rename the file *constants.h.TEMPLATE* to *constants.h*.
-    - Change the SSID and PASSWORD correspoding to the WiFi network. 
+    - Change the SSID and PASSWORD correspoding to the WiFi network.
+    - Change the IP address and gateway if necessary in *constants.h*, *index.h* and *websocketclient.py*.
 5. Flash the ESP32:
     - For VSCode, modify the *arduino.json* and *c_cpp_properties.json* files to add the missing libraries.
     - For the Arduino IDE, change the *src* folder to match the name of the *.ino* file.
