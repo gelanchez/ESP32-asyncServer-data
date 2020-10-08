@@ -41,9 +41,81 @@
     <!-- JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
     <script>
+        //window.setInterval(updateValues, 10); // Update values used when testing
+
+        var ctxTemp = document.getElementById('temperatureChart').getContext('2d');
+        var temperatureChart = new Chart(ctxTemp, {
+            type: 'line',
+            data: {
+                // labels: [1, 2, 3],
+                datasets: [{
+                    label: 'Temperature',
+                    // data: [12, 19, 3],
+                    fill: 'false',
+                    borderColor: 'red',
+                    borderWidth: 2,
+                    pointRadius: 1
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        display: false,  //this will remove all the x-axis grid lines
+                        ticks: {
+                            display: false  //this will remove only the label
+                        }
+                    }]
+                },
+                showLines: false,  // disable for all datasets
+                elements: {
+                    line: {
+                        tension: 0  // disables bezier curves
+                    }
+                },
+                animation: {
+                    duration: 0  // general animation time
+                },
+                hover: {
+                    animationDuration: 0  // duration of animations when hovering an item
+                },
+                responsiveAnimationDuration: 0  // animation duration after a resize
+            }
+        });
+
+        var ctxIllum = document.getElementById('illuminanceChart').getContext('2d');
+        var illuminanceChart = new Chart(ctxIllum, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Illuminance',
+                    fill: 'false',
+                    borderColor: 'yellow',
+                    borderWidth: 2,
+                    pointRadius: 1
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        display: false,  //this will remove all the x-axis grid lines
+                        ticks: {
+                            display: false  //this will remove only the label
+                        }
+                    }]
+                },
+                showLines: false,  // disable for all datasets
+                animation: {
+                    duration: 0  // general animation time
+                },
+                hover: {
+                    animationDuration: 0  // duration of animations when hovering an item
+                },
+                responsiveAnimationDuration: 0  // animation duration after a resize
+            }
+        });
+
         webSocket = new WebSocket("ws://10.42.0.190/ws");
-        webSocket.onmessage = function (event)
-        {
+        webSocket.onmessage = function (event) {
             let myObj = JSON.parse(event.data);
             let temp = myObj["temperature"];
             let illum = myObj["illuminance"];
@@ -51,18 +123,34 @@
             updateCharts(temp, illum);
         }
 
-        function updateValues(temperature, illuminance)
-        {
+        function updateValues(temperature, illuminance) {
             //temperature = Math.floor(Math.random() * 100); // Testing
             //illuminance = Math.floor(Math.random() * 100); // Testing
             document.getElementById("temperature").innerHTML = temperature;
             document.getElementById("illuminance").innerHTML = illuminance;
         }
 
-        function updateCharts(temperature, illuminance)
-        {
-            
+        function updateCharts(temperature, illuminance) {
+
         }
+
+        function addData(chart, label, data) {
+            chart.data.datasets.forEach((dataset) => {
+                dataset.data.push(data);
+            });
+            chart.data.labels.push(label);
+            chart.update();
+        }
+
+        function removeData(chart)
+        {
+            chart.data.datasets.forEach((dataset) => {
+                dataset.data.shift();
+            }); 
+            chart.data.labels.shift();
+            chart.update();
+        }
+        
     </script>
 </body>
 
