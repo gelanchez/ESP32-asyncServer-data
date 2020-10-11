@@ -17,6 +17,7 @@
     <h3>LED</h3>
     <h3>Sensors</h3>
     <p>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx</p>
+    
     <div class="chart-container" style="position: relative; height:40vh; width:80vw">
         <canvas id="temperatureChart" width="800" height="200" aria-label="Temperature chart" role="img"></canvas>
     </div>
@@ -61,10 +62,13 @@
         }
         
         function updateCharts(temperature, illuminance) {
+            let date  = new Date();
+            date.getSeconds();
             addData(temperatureChart, 1, [temperature]);
             addData(illuminanceChart, 1, [illuminance]);
-            if (counter < 1000)
+            if (counter < 1000){
                 counter++;
+            }
             else {
                 removeData(temperatureChart);
                 removeData(illuminanceChart); 
@@ -85,17 +89,32 @@
                     backgroundColor: 'red',
                     borderWidth: 2,
                     pointRadius: 1,
-                    fill: 'false'
+                    fill: false
                 }]
             },
             options: {
+                legend: {
+                    display: false
+                },  
+                responsive: true,
                 scales: {
                     xAxes: [{
-                        display: false,  //this will remove all the x-axis grid lines
+                        display: false,  // this will remove all the x-axis grid lines
                         ticks: {
-                            display: false  //this will remove only the label
+                            display: false  // this will remove only the label
                         }
-                    }]
+                    }],
+                    yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Temperature (ºC)'
+                        },
+                        ticks: {
+                            min: 0,
+                            max: 40
+                        }
+					}]
                 },
                 showLines: false,  // disable for all datasets
                 elements: {
@@ -123,17 +142,32 @@
                     backgroundColor: 'yellow',
                     borderWidth: 2,
                     pointRadius: 1,
-                    fill: 'false'
+                    fill: false
                 }]
             },
             options: {
+                legend: {
+                    display: false
+                },                
+                responsive: true,
                 scales: {
                     xAxes: [{
-                        display: false,  //this will remove all the x-axis grid lines
+                        display: false,  // this will remove all the x-axis grid lines
                         ticks: {
-                            display: false  //this will remove only the label
+                            display: false  // this will remove only the label
                         }
-                    }]
+                    }],
+                    yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Illuminance (lux)'
+						},
+                        ticks: {
+                            min: 0,
+                            max: 10000
+                        }
+					}]
                 },
                 showLines: false,  // disable for all datasets
                 animation: {
@@ -155,9 +189,9 @@
         }
 
         function removeData(chart) {
-            chart.data.labels.pop();
+            chart.data.labels.shift();
             chart.data.datasets.forEach((dataset) => {
-                dataset.data.pop();
+                dataset.data.shift();
             });
             chart.update();
         }

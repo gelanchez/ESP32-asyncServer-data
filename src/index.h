@@ -31,16 +31,17 @@ const char MAIN_page[] PROGMEM = R"=====(
 </head>
 
 <body>
-    <h2>ESP32 data</h2>
-    <p>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lux</p>
+    <h3>LED</h3>
+    <h3>Sensors</h3>
+    <p>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx</p>
+    
     <div class="chart-container" style="position: relative; height:40vh; width:80vw">
-        <canvas id="temperatureChart" height="200" width="800" aria-label="Temperature chart" role="img"></canvas>
+        <canvas id="temperatureChart" width="800" height="200" aria-label="Temperature chart" role="img"></canvas>
     </div>
     <br>
     <div class="chart-container" style="position: relative; height:40vh; width:80vw">
-        <canvas id="illuminanceChart" height="200" width="800" aria-label="Illuminance chart" role="img"></canvas>
+        <canvas id="illuminanceChart" width="800" height="200" aria-label="Illuminance chart" role="img"></canvas>
     </div>
-    <canvas id="myChart" width="400" height="400"></canvas>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -56,32 +57,81 @@ const char MAIN_page[] PROGMEM = R"=====(
         crossorigin="anonymous"></script>
     
     <!-- JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
     <script>
-        //window.setInterval(updateValues, 10); // Update values used when testing
 
+        webSocket = new WebSocket("ws://10.42.0.190/ws");
+        webSocket.onmessage = function (event) {
+            let myObj = JSON.parse(event.data);
+            let temp = myObj["temperature"];
+            let illum = myObj["illuminance"];
+            updateValues(temp, illum);
+            updateCharts(temp, illum);
+        }
+        
+        var counter = 0;
+        
+        function updateValues(temperature, illuminance) {
+            //temperature = Math.floor(Math.random() * 100); // Testing
+            //illuminance = Math.floor(Math.random() * 100); // Testing
+            document.getElementById("temperature").innerHTML = temperature;
+            document.getElementById("illuminance").innerHTML = illuminance;
+        }
+        
+        function updateCharts(temperature, illuminance) {
+            let date  = new Date();
+            date.getSeconds();
+            addData(temperatureChart, 1, [temperature]);
+            addData(illuminanceChart, 1, [illuminance]);
+            if (counter < 1000){
+                counter++;
+            }
+            else {
+                removeData(temperatureChart);
+                removeData(illuminanceChart); 
+            }   
+        }
+        
+        //window.setInterval(updateValues, 10); // Update values used when testing
+        
         var ctxTemp = document.getElementById('temperatureChart').getContext('2d');
         var temperatureChart = new Chart(ctxTemp, {
             type: 'line',
             data: {
-                // labels: [1, 2, 3],
+                //labels: [1, 2, 3],
                 datasets: [{
                     label: 'Temperature',
-                    // data: [12, 19, 3],
-                    fill: 'false',
+                    //data: [12, 19, 3],
                     borderColor: 'red',
+                    backgroundColor: 'red',
                     borderWidth: 2,
-                    pointRadius: 1
+                    pointRadius: 1,
+                    fill: false
                 }]
             },
             options: {
+                legend: {
+                    display: false
+                },  
+                responsive: true,
                 scales: {
                     xAxes: [{
-                        display: false,  //this will remove all the x-axis grid lines
+                        display: false,  // this will remove all the x-axis grid lines
                         ticks: {
-                            display: false  //this will remove only the label
+                            display: false  // this will remove only the label
                         }
-                    }]
+                    }],
+                    yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Temperature (ºC)'
+                        },
+                        ticks: {
+                            min: 0,
+                            max: 40
+                        }
+					}]
                 },
                 showLines: false,  // disable for all datasets
                 elements: {
@@ -105,20 +155,36 @@ const char MAIN_page[] PROGMEM = R"=====(
             data: {
                 datasets: [{
                     label: 'Illuminance',
-                    fill: 'false',
                     borderColor: 'yellow',
+                    backgroundColor: 'yellow',
                     borderWidth: 2,
-                    pointRadius: 1
+                    pointRadius: 1,
+                    fill: false
                 }]
             },
             options: {
+                legend: {
+                    display: false
+                },                
+                responsive: true,
                 scales: {
                     xAxes: [{
-                        display: false,  //this will remove all the x-axis grid lines
+                        display: false,  // this will remove all the x-axis grid lines
                         ticks: {
-                            display: false  //this will remove only the label
+                            display: false  // this will remove only the label
                         }
-                    }]
+                    }],
+                    yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Illuminance (lux)'
+						},
+                        ticks: {
+                            min: 0,
+                            max: 10000
+                        }
+					}]
                 },
                 showLines: false,  // disable for all datasets
                 animation: {
@@ -131,35 +197,6 @@ const char MAIN_page[] PROGMEM = R"=====(
             }
         });
 
-        webSocket = new WebSocket("ws://10.42.0.190/ws");
-        webSocket.onmessage = function (event) {
-            let myObj = JSON.parse(event.data);
-            let temp = myObj["temperature"];
-            let illum = myObj["illuminance"];
-            updateValues(temp, illum);
-            updateCharts(temp, illum);
-        }
-
-        function updateValues(temperature, illuminance) {
-            //temperature = Math.floor(Math.random() * 100); // Testing
-            //illuminance = Math.floor(Math.random() * 100); // Testing
-            document.getElementById("temperature").innerHTML = temperature;
-            document.getElementById("illuminance").innerHTML = illuminance;
-        }
-        
-        var counter = 0;
-
-        function updateCharts(temperature, illuminance) {
-            addData(temperatureChart, 1, [temperature]);
-            addData(illuminanceChart, 1, [illuminance]);
-            if (counter < 1000)
-                counter++;
-            else {
-                removeData(temperatureChart);
-                removeData(illuminanceChart); 
-            }   
-        }
-
         function addData(chart, label, data) {
             chart.data.labels.push(label);
             chart.data.datasets.forEach((dataset) => {
@@ -168,12 +205,11 @@ const char MAIN_page[] PROGMEM = R"=====(
             chart.update();
         }
 
-        function removeData(chart)
-        {
-            chart.data.labels.pop();
+        function removeData(chart) {
+            chart.data.labels.shift();
             chart.data.datasets.forEach((dataset) => {
-                dataset.data.pop();
-            }); 
+                dataset.data.shift();
+            });
             chart.update();
         }
         
