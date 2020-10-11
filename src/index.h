@@ -80,7 +80,7 @@ const char MAIN_page[] PROGMEM = R"=====(
         
         function updateCharts(temperature, illuminance) {
             let date  = new Date();
-            let timeDislpayed = date.getMinutes() + ":" + date.getSeconds();
+            let timeDislpayed = date.getMinutes().toString().padStart(2, '0') + ":" + date.getSeconds().toString().padStart(2, '0');
             addData(temperatureChart, timeDislpayed, [temperature]);
             addData(illuminanceChart, timeDislpayed, [illuminance]);
             if (counter < 100){
