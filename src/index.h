@@ -31,9 +31,9 @@ const char MAIN_page[] PROGMEM = R"=====(
 </head>
 
 <body>
-    <h3>LED</h3>
-    <h3>Sensors</h3>
-    <p>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx</p>
+    <h4 style="text-align:center">ESP32 async server</h4>
+    <p><b>LED: </b></p>
+    <p><b>Sensors: </b>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx</p>
     
     <div class="chart-container" style="position: relative; height:40vh; width:80vw">
         <canvas id="temperatureChart" width="800" height="200" aria-label="Temperature chart" role="img"></canvas>
@@ -80,10 +80,10 @@ const char MAIN_page[] PROGMEM = R"=====(
         
         function updateCharts(temperature, illuminance) {
             let date  = new Date();
-            date.getSeconds();
-            addData(temperatureChart, 1, [temperature]);
-            addData(illuminanceChart, 1, [illuminance]);
-            if (counter < 1000){
+            let timeDislpayed = date.getMinutes() + ":" + date.getSeconds();
+            addData(temperatureChart, timeDislpayed, [temperature]);
+            addData(illuminanceChart, timeDislpayed, [illuminance]);
+            if (counter < 100){
                 counter++;
             }
             else {
@@ -101,7 +101,6 @@ const char MAIN_page[] PROGMEM = R"=====(
                 //labels: [1, 2, 3],
                 datasets: [{
                     label: 'Temperature',
-                    //data: [12, 19, 3],
                     borderColor: 'red',
                     backgroundColor: 'red',
                     borderWidth: 2,
@@ -116,13 +115,13 @@ const char MAIN_page[] PROGMEM = R"=====(
                 responsive: true,
                 scales: {
                     xAxes: [{
-                        display: false,  // this will remove all the x-axis grid lines
+						display: true,
                         ticks: {
-                            display: false  // this will remove only the label
+                            display: true
                         }
                     }],
                     yAxes: [{
-						display: true,
+                        display: true,
 						scaleLabel: {
 							display: true,
 							labelString: 'Temperature (ºC)'
@@ -133,7 +132,7 @@ const char MAIN_page[] PROGMEM = R"=====(
                         }
 					}]
                 },
-                showLines: false,  // disable for all datasets
+                showLines: true,
                 elements: {
                     line: {
                         tension: 0  // disables bezier curves
@@ -169,9 +168,9 @@ const char MAIN_page[] PROGMEM = R"=====(
                 responsive: true,
                 scales: {
                     xAxes: [{
-                        display: false,  // this will remove all the x-axis grid lines
+                        display: true,
                         ticks: {
-                            display: false  // this will remove only the label
+                            display: true
                         }
                     }],
                     yAxes: [{
@@ -186,7 +185,7 @@ const char MAIN_page[] PROGMEM = R"=====(
                         }
 					}]
                 },
-                showLines: false,  // disable for all datasets
+                showLines: true,
                 animation: {
                     duration: 0  // general animation time
                 },
