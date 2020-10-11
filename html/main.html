@@ -14,8 +14,9 @@
 </head>
 
 <body>
-    <h2>ESP32 data</h2>
-    <p>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lux</p>
+    <h3>LED</h3>
+    <h3>Sensors</h3>
+    <p>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx</p>
     <div class="chart-container" style="position: relative; height:40vh; width:80vw">
         <canvas id="temperatureChart" width="800" height="200" aria-label="Temperature chart" role="img"></canvas>
     </div>
@@ -76,14 +77,15 @@
         var temperatureChart = new Chart(ctxTemp, {
             type: 'line',
             data: {
-                // labels: [1, 2, 3],
+                //labels: [1, 2, 3],
                 datasets: [{
                     label: 'Temperature',
-                    // data: [12, 19, 3],
-                    fill: 'false',
+                    //data: [12, 19, 3],
                     borderColor: 'red',
+                    backgroundColor: 'red',
                     borderWidth: 2,
-                    pointRadius: 1
+                    pointRadius: 1,
+                    fill: 'false'
                 }]
             },
             options: {
@@ -117,10 +119,11 @@
             data: {
                 datasets: [{
                     label: 'Illuminance',
-                    fill: 'false',
                     borderColor: 'yellow',
+                    backgroundColor: 'yellow',
                     borderWidth: 2,
-                    pointRadius: 1
+                    pointRadius: 1,
+                    fill: 'false'
                 }]
             },
             options: {
