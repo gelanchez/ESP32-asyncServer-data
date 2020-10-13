@@ -42,8 +42,9 @@ namespace Constants
     const uint8_t photoresistorPin(34);  // Connected through a voltage divider
     const uint16_t resistancePhoto(10000);  // 10 kohm
     const float minResistance(1);
-    const float parameter1(-1.430677);
-    const float parameter2(25428013);
+    // 100 kohm @ 1 lx and 30 kohm @ 10 lx (See graph)
+    const float parameter1(-1.91248928939);
+    const float parameter2(3651291002.57);
 
     // Values to smooth the readings
     const uint8_t iterations(5);

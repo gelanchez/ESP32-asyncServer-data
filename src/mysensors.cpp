@@ -93,7 +93,7 @@ Photoresistor::~Photoresistor()
 float Photoresistor::_rawToValue(int rawValue)
 {
     float voltage = (static_cast<float>(rawValue) / Constants::resolution) * Constants::maxVoltage;
-    float resistance = Constants::resistancePhoto * (static_cast<float>(Constants::maxVoltage) / voltage - 1);
+    float resistance = Constants::resistancePhoto * ((static_cast<float>(Constants::maxVoltage) / voltage) - 1);
     if (resistance < Constants::minResistance)
         resistance = Constants::minResistance;
     float illuminance = pow(resistance, Constants::parameter1) * Constants::parameter2;
