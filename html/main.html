@@ -42,41 +42,6 @@
     <!-- JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
     <script>
-
-        webSocket = new WebSocket("ws://10.42.0.190/ws");
-        webSocket.onmessage = function (event) {
-            let myObj = JSON.parse(event.data);
-            let temp = myObj["temperature"];
-            let illum = myObj["illuminance"];
-            updateValues(temp, illum);
-            updateCharts(temp, illum);
-        }
-        
-        var counter = 0;
-        
-        function updateValues(temperature, illuminance) {
-            //temperature = Math.floor(Math.random() * 100); // Testing
-            //illuminance = Math.floor(Math.random() * 100); // Testing
-            document.getElementById("temperature").innerHTML = temperature;
-            document.getElementById("illuminance").innerHTML = illuminance;
-        }
-        
-        function updateCharts(temperature, illuminance) {
-            let date  = new Date();
-            let timeDislpayed = date.getMinutes().toString().padStart(2, '0') + ":" + date.getSeconds().toString().padStart(2, '0');
-            addData(temperatureChart, timeDislpayed, [temperature]);
-            addData(illuminanceChart, timeDislpayed, [illuminance]);
-            if (counter < 100){
-                counter++;
-            }
-            else {
-                removeData(temperatureChart);
-                removeData(illuminanceChart); 
-            }   
-        }
-        
-        //window.setInterval(updateValues, 10); // Update values used when testing
-        
         var ctxTemp = document.getElementById('temperatureChart').getContext('2d');
         var temperatureChart = new Chart(ctxTemp, {
             type: 'line',
@@ -179,6 +144,40 @@
             }
         });
 
+        webSocket = new WebSocket("ws://10.42.0.190/ws");
+        webSocket.onmessage = function (event) {
+            let myObj = JSON.parse(event.data);
+            let temp = myObj["temperature"];
+            let illum = myObj["illuminance"];
+            updateValues(temp, illum);
+            updateCharts(temp, illum);
+        }
+        
+        function updateValues(temperature, illuminance) {
+            //temperature = Math.floor(Math.random() * 100); // Testing
+            //illuminance = Math.floor(Math.random() * 100); // Testing
+            document.getElementById("temperature").innerHTML = temperature;
+            document.getElementById("illuminance").innerHTML = illuminance;
+        }
+        
+        var counter = 0;
+        
+        function updateCharts(temperature, illuminance) {
+            let date  = new Date();
+            let timeDislpayed = date.getMinutes().toString().padStart(2, '0') + ":" + date.getSeconds().toString().padStart(2, '0');
+            addData(temperatureChart, timeDislpayed, [temperature]);
+            addData(illuminanceChart, timeDislpayed, [illuminance]);
+            if (counter < 100){
+                counter++;
+            }
+            else {
+                removeData(temperatureChart);
+                removeData(illuminanceChart); 
+            }   
+        }
+        
+        //window.setInterval(updateValues, 10); // Update values used when testing
+        
         function addData(chart, label, data) {
             chart.data.labels.push(label);
             chart.data.datasets.forEach((dataset) => {
@@ -194,7 +193,6 @@
             });
             chart.update();
         }
-        
     </script>
 </body>
 
