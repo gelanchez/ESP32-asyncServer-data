@@ -7,7 +7,7 @@ Apart from the Async server and [websockets](https://en.wikipedia.org/wiki/WebSo
 - [Bootstrap](https://getbootstrap.com/) CSS framework.
 
 ## Website appearance
-<img src="./ESP32-asyncServer-data_screenshot.png" alt="Website appearance" width="70%" height="auto">
+<img src="./ESP32-asyncServer-data_screenshot.png" alt="Website appearance" width="100%" height="auto">
 
 ## Schematic
 The following parts have been used in the electronic circuit. Nevertheless, they can be replaced by other similar ones with little change in the code.
@@ -31,8 +31,8 @@ External libraries:
 - [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer). Async HTTP and WebSocket Server.
 
 ## Usage
-1. Connect the ESP32 as showed in the schematics.
-2. Install the standard ESP libraries either using the Arduino IDE or directly from [Espressif](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/).
+1. Build the circuit as shown in the schematic.
+2. Install the standard ESP32 libraries either using the Arduino IDE or directly from [Espressif](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/).
 3. Install the required external libraries.
 4. Download the repository and rename the file *constants.h.TEMPLATE* to *constants.h*.
     - Change the SSID and PASSWORD correspoding to the WiFi network.
