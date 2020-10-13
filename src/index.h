@@ -1,7 +1,7 @@
 /**
  * @file index.h
  * @author José Ángel Sánchez (https://github.com/gelanchez)
- * @brief HTML with the main pages.
+ * @brief HTML with the main page.
  * @version 0.0.1
  * @date 2020-09-29
  * @copyright GPL-3.0
@@ -32,14 +32,15 @@ const char MAIN_page[] PROGMEM = R"=====(
 
 <body>
     <h4 style="text-align:center">ESP32 async server with websockets</h4>
-    <p><b>LED: </b></p>
-    <p><b>Sensors: </b>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx</p>
+    <p style="text-align:center">
+        <b>LED: &nbsp;</b><input id ="ledbutton" class="btn btn-dark btn-sm" type="submit" value="Turn LED on " onclick="changeLed()" style="margin-right: 2em">
+        <b>Sensors: </b>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx</p>
     
-    <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+    <div class="chart-container" style="position: relative; height:40vh; width:80vw; margin:auto">
         <canvas id="temperatureChart" width="800" height="200" aria-label="Temperature chart" role="img"></canvas>
     </div>
     <br>
-    <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+    <div class="chart-container" style="position: relative; height:40vh; width:80vw; margin:auto">
         <canvas id="illuminanceChart" width="800" height="200" aria-label="Illuminance chart" role="img"></canvas>
     </div>
 
