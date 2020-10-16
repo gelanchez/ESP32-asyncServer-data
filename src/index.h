@@ -36,11 +36,11 @@ const char MAIN_page[] PROGMEM = R"=====(
         <b>LED: &nbsp;</b><input id ="ledbutton" class="btn btn-dark btn-sm" type="submit" value="Turn LED on " onclick="changeLed()" style="margin-right: 2em">
         <b>Sensors: </b>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx</p>
     
-    <div class="chart-container" style="position: relative; height:40vh; width:80vw; margin:auto">
+    <div class="chart-container" style="position: relative; width:95vw; margin:auto">
         <canvas id="temperatureChart" width="800" height="200" aria-label="Temperature chart" role="img"></canvas>
     </div>
     <br>
-    <div class="chart-container" style="position: relative; height:40vh; width:80vw; margin:auto">
+    <div class="chart-container" style="position: relative; width:95vw; margin:auto">
         <canvas id="illuminanceChart" width="800" height="200" aria-label="Illuminance chart" role="img"></canvas>
     </div>
 

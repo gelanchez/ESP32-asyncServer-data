@@ -19,7 +19,8 @@ The following parts have been used in the electronic circuit. Nevertheless, they
 
 <img src="./ESP32-web-data_schem.svg" alt="Electrical schematic" width="100%" height="auto">
 ESP32 pins in the schematic are referred as 3.3V, GND and D*.
-Note: ESP32 ADC2 pins cannot be used when Wi-Fi is used.
+
+*Note: ESP32 ADC2 pins cannot be used when Wi-Fi is used.*
 
 ## Requirements
 ESP32 libraries:
