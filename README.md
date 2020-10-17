@@ -4,7 +4,6 @@ This repository contains an implementation of an asynchronous HTTP webserver for
 Apart from the Async server and [websockets](https://en.wikipedia.org/wiki/WebSocket), the following technologies are used:
 - [JSON](https://www.json.org/json-en.html) data format.
 - [charts.js](https://www.chartjs.org/) for data presentation.
-- [Bootstrap](https://getbootstrap.com/) CSS framework.
 
 ## Website appearance
 <img src="./ESP32-asyncServer-data_screenshot.png" alt="Website appearance" width="100%" height="auto">

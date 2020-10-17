@@ -17,24 +17,28 @@ const char MAIN_page[] PROGMEM = R"=====(
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>ESP32-asyncServer-data</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="José Ángel">
     <meta name="description" content="ESP32 async webserver data sensor">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <style>
+        html {text-align: center;}
+        #title {
+            margin: 0px auto;
+            text-decoration: underline;
+        }
+    </style>
 </head>
-
 <body>
-    <h4 style="text-align:center"><u>ESP32 async server with websockets</u></h4>
-    <p style="text-align:center">
-        <b>LED: &nbsp;</b><input id ="ledbutton" class="btn btn-dark btn-sm" type="submit" value="Turn LED on " onclick="changeLed()" style="margin-right: 2em">
-        <b>Sensors: </b>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx</p>
+    <h2 id="title">ESP32 async server with websockets</h2>
+    <p>
+        <button id="ledButton" onclick="changeLed()" disabled>Toggle LED</button>
+        <canvas id="led" width="50" height="50"></canvas>
+        <span><b>Sensors: </b>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx.</span>
+    </p>
     
     <div class="chart-container" style="position: relative; width:95vw; margin:auto">
         <canvas id="temperatureChart" width="800" height="200" aria-label="Temperature chart" role="img"></canvas>
@@ -44,24 +48,21 @@ const char MAIN_page[] PROGMEM = R"=====(
         <canvas id="illuminanceChart" width="800" height="200" aria-label="Illuminance chart" role="img"></canvas>
     </div>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!-- Not using the jQuery slim version as it doesn't have AJAX-->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
-        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-        crossorigin="anonymous"></script>
-    
-    <!-- JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
     <script type = "text/javascript">
         var counter = 0;
+        var HTMLbutton = document.getElementById("ledButton");
         var led = false;
+
+        // Draw LED
+        var canvasLED = document.getElementById("led");
+        var contextLED = canvasLED.getContext("2d");
+        contextLED.arc(25, 25, 15, 0, Math.PI * 2, false);
+        contextLED.lineWidth = 3;
+        contextLED.strokeStyle = "black";
+        contextLED.fillStyle = "black";
+        contextLED.stroke();
+        contextLED.fill();
 
         var ctxTemp = document.getElementById('temperatureChart').getContext('2d');
         var temperatureChart = new Chart(ctxTemp, {
@@ -166,12 +167,18 @@ const char MAIN_page[] PROGMEM = R"=====(
         });
 
         var webSocket = new WebSocket("ws://10.42.0.190/ws");
+        webSocket.onopen = function (event) {
+            HTMLbutton.disabled = false;
+        }
+        webSocket.onclose = function (event) {
+            HTMLbuton.disabled = true;
+        }
         webSocket.onmessage = function (event) {
             let myObj = JSON.parse(event.data);
             let ledStatus = myObj["ledStatus"];
             let temp = myObj["temperature"];
             let illum = myObj["illuminance"];
-            if (ledStatus != led) {
+            if (led != ledStatus) {
                 led = ledStatus;
                 updateLed();
             }
@@ -185,12 +192,12 @@ const char MAIN_page[] PROGMEM = R"=====(
         
         function updateLed() {
             if (led){
-                document.getElementById("ledbutton").className = "btn btn-warning btn-sm";
-                document.getElementById("ledbutton").value = "Switch LED off";
+                contextLED.fillStyle = "red";
+                contextLED.fill();
             }
             else {
-                document.getElementById("ledbutton").className = "btn btn-dark btn-sm";
-                document.getElementById("ledbutton").value = "Switch LED on";
+                contextLED.fillStyle = "black";
+                contextLED.fill();
             }
         }
 
@@ -234,7 +241,6 @@ const char MAIN_page[] PROGMEM = R"=====(
         }
     </script>
 </body>
-
 </html>
 
 )=====";
