@@ -18,10 +18,11 @@
 #include "mysensors.h"
 #include <WiFi.h>
 
+bool g_ledStatus(LOW);
 Photoresistor g_photoresistor(Constants::photoresistorPin);
 Thermistor g_thermistor(Constants::thermistorPin);
 
-StaticJsonDocument<150> g_doc;
+StaticJsonDocument<100> g_doc;
 
 AsyncWebServer g_server(80);
 AsyncWebSocket g_ws("/ws");
@@ -30,13 +31,21 @@ static unsigned long g_lastUpdate = millis();
 
 void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len);
 
+void changeLed()
+{
+    g_ledStatus = !g_ledStatus;
+    if (g_ledStatus)
+        digitalWrite(Constants::ledPin, HIGH);
+    else
+        digitalWrite(Constants::ledPin, LOW);
+}
+
 void setup()
 {
     Serial.begin(115200);
     delay(1000);
 
     pinMode(Constants::ledPin, OUTPUT);
-    pinMode(Constants::photoresistorPin, INPUT);
 
     /**
      * @brief Connect to WiFi.
@@ -76,6 +85,7 @@ void loop()
     {
         g_lastUpdate = millis();
 
+        g_doc["ledStatus"] = g_ledStatus;
         g_doc["illuminance"] = g_photoresistor.read();
         g_doc["temperature"] = g_thermistor.read();
 
@@ -87,10 +97,7 @@ void loop()
 
         String output;
         serializeJson(g_doc, output);
-        
-        //char charJson[output.length() + 1];
-        //output.toCharArray(charJson, output.length() + 1);
-            
+           
         g_ws.textAll(output);
     
         g_ws.cleanupClients();
@@ -109,11 +116,18 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
     }
     else if(type == WS_EVT_DATA)
     {
-        Serial.println("Data received: ");
-        for(int i=0; i < len; i++)
+        if ((char) data[0] == 'C')
         {
-            Serial.print((char) data[i]);
+            changeLed();
         }
-        Serial.println();
+        else
+        {
+            Serial.print("Data received: ");
+            for(int i=0; i < len; i++)
+            {
+                Serial.print((char) data[i]);
+            }
+            Serial.println();
+        }
     } 
 }

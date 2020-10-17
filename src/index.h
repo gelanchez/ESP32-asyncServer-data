@@ -23,7 +23,7 @@ const char MAIN_page[] PROGMEM = R"=====(
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="José Ángel">
-    <meta name="description" content="ESP32 async webserver data sensor, proof of concept">
+    <meta name="description" content="ESP32 async webserver data sensor">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -31,7 +31,7 @@ const char MAIN_page[] PROGMEM = R"=====(
 </head>
 
 <body>
-    <h4 style="text-align:center">ESP32 async server with websockets</h4>
+    <h4 style="text-align:center"><u>ESP32 async server with websockets</u></h4>
     <p style="text-align:center">
         <b>LED: &nbsp;</b><input id ="ledbutton" class="btn btn-dark btn-sm" type="submit" value="Turn LED on " onclick="changeLed()" style="margin-right: 2em">
         <b>Sensors: </b>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx</p>
@@ -59,7 +59,10 @@ const char MAIN_page[] PROGMEM = R"=====(
     
     <!-- JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
-    <script>
+    <script type = "text/javascript">
+        var counter = 0;
+        var led = false;
+
         var ctxTemp = document.getElementById('temperatureChart').getContext('2d');
         var temperatureChart = new Chart(ctxTemp, {
             type: 'line',
@@ -162,24 +165,42 @@ const char MAIN_page[] PROGMEM = R"=====(
             }
         });
 
-        webSocket = new WebSocket("ws://10.42.0.190/ws");
+        var webSocket = new WebSocket("ws://10.42.0.190/ws");
         webSocket.onmessage = function (event) {
             let myObj = JSON.parse(event.data);
+            let ledStatus = myObj["ledStatus"];
             let temp = myObj["temperature"];
             let illum = myObj["illuminance"];
+            if (ledStatus != led) {
+                led = ledStatus;
+                updateLed();
+            }
             updateValues(temp, illum);
             updateCharts(temp, illum);
         }
+
+        function changeLed() {
+            webSocket.send("C");
+        }
         
+        function updateLed() {
+            if (led){
+                document.getElementById("ledbutton").className = "btn btn-warning btn-sm";
+                document.getElementById("ledbutton").value = "Switch LED off";
+            }
+            else {
+                document.getElementById("ledbutton").className = "btn btn-dark btn-sm";
+                document.getElementById("ledbutton").value = "Switch LED on";
+            }
+        }
+
         function updateValues(temperature, illuminance) {
             //temperature = Math.floor(Math.random() * 100); // Testing
             //illuminance = Math.floor(Math.random() * 100); // Testing
             document.getElementById("temperature").innerHTML = temperature;
             document.getElementById("illuminance").innerHTML = illuminance;
         }
-        
-        var counter = 0;
-        
+  
         function updateCharts(temperature, illuminance) {
             let date  = new Date();
             let timeDislpayed = date.getMinutes().toString().padStart(2, '0') + ":" + date.getSeconds().toString().padStart(2, '0');
