@@ -8,19 +8,24 @@
     <meta name="description" content="ESP32 async webserver data sensor">
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <style>
-        html {text-align: center;}
+        html {
+            text-align: center;
+            font-family: Arial, Helvetica, sans-serif;
+        }
         #title {
             margin: 0px auto;
             text-decoration: underline;
         }
+        #data { margin: 5px auto;}
+        #led { margin-bottom: -20px;}
     </style>
 </head>
 <body>
     <h2 id="title">ESP32 async server with websockets</h2>
-    <p>
+    <p id="data">
         <button id="ledButton" onclick="changeLed()" disabled>Toggle LED</button>
         <canvas id="led" width="50" height="50"></canvas>
-        <span><b>Sensors: </b>Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx.</span>
+        <span>SENSORS: Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx.</span>
     </p>
     
     <div class="chart-container" style="position: relative; width:95vw; margin:auto">
@@ -32,7 +37,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
-    <script type = "text/javascript">
+    <script type="text/javascript">
         var counter = 0;
         var HTMLbutton = document.getElementById("ledButton");
         var led = false;
@@ -159,12 +164,12 @@
         webSocket.onmessage = function (event) {
             let myObj = JSON.parse(event.data);
             let ledStatus = myObj["ledStatus"];
-            let temp = myObj["temperature"];
-            let illum = myObj["illuminance"];
             if (led != ledStatus) {
                 led = ledStatus;
                 updateLed();
             }
+            let temp = myObj["temperature"];
+            let illum = myObj["illuminance"];
             updateValues(temp, illum);
             updateCharts(temp, illum);
         }
