@@ -60,8 +60,7 @@ const char MAIN_page[] PROGMEM = R"=====(
         var led = false;
 
         // Draw LED
-        var canvasLED = document.getElementById("led");
-        var contextLED = canvasLED.getContext("2d");
+        var contextLED = document.getElementById("led").getContext("2d");
         contextLED.arc(25, 25, 15, 0, Math.PI * 2, false);
         contextLED.lineWidth = 3;
         contextLED.strokeStyle = "black";
@@ -179,16 +178,19 @@ const char MAIN_page[] PROGMEM = R"=====(
             HTMLbuton.disabled = true;
         }
         webSocket.onmessage = function (event) {
-            let myObj = JSON.parse(event.data);
-            let ledStatus = myObj["ledStatus"];
-            if (led != ledStatus) {
-                led = ledStatus;
+            let jsonObj = JSON.parse(event.data);
+            // LED change
+            if ((jsonObj["ledStatus"] != undefined) && (jsonObj["ledStatus"] != led)) {
+                led = jsonObj["ledStatus"];
                 updateLed();
             }
-            let temp = myObj["temperature"];
-            let illum = myObj["illuminance"];
-            updateValues(temp, illum);
-            updateCharts(temp, illum);
+            // Sensors update
+            else {
+                let temp = jsonObj["temperature"];
+                let illum = jsonObj["illuminance"];
+                updateValues(temp, illum);
+                updateCharts(temp, illum);
+            }
         }
 
         function changeLed() {
@@ -206,6 +208,8 @@ const char MAIN_page[] PROGMEM = R"=====(
             }
         }
 
+        //window.setInterval(updateValues, 10); // Update values used when testing
+
         function updateValues(temperature, illuminance) {
             //temperature = Math.floor(Math.random() * 100); // Testing
             //illuminance = Math.floor(Math.random() * 100); // Testing
@@ -218,6 +222,7 @@ const char MAIN_page[] PROGMEM = R"=====(
             let timeDislpayed = date.getMinutes().toString().padStart(2, '0') + ":" + date.getSeconds().toString().padStart(2, '0');
             addData(temperatureChart, timeDislpayed, [temperature]);
             addData(illuminanceChart, timeDislpayed, [illuminance]);
+            // Remove values from chart after 100 data
             if (counter < 100){
                 counter++;
             }
@@ -226,9 +231,7 @@ const char MAIN_page[] PROGMEM = R"=====(
                 removeData(illuminanceChart); 
             }   
         }
-        
-        //window.setInterval(updateValues, 10); // Update values used when testing
-        
+                
         function addData(chart, label, data) {
             chart.data.labels.push(label);
             chart.data.datasets.forEach((dataset) => {

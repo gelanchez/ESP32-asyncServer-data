@@ -30,15 +30,7 @@ AsyncWebSocket g_ws("/ws");
 static unsigned long g_lastUpdate = millis();
 
 void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len);
-
-void changeLed()
-{
-    g_ledStatus = !g_ledStatus;
-    if (g_ledStatus)
-        digitalWrite(Constants::ledPin, HIGH);
-    else
-        digitalWrite(Constants::ledPin, LOW);
-}
+void changeLed();
 
 void setup()
 {
@@ -62,7 +54,6 @@ void setup()
     /**
      * @brief Server setup.
      */
-
     g_server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
         request->send_P(200, "text/html", MAIN_page);
         });
@@ -75,7 +66,6 @@ void setup()
 
     g_ws.onEvent(onWsEvent);
     g_server.addHandler(&g_ws);
-
     g_server.begin();
 }
 
@@ -85,23 +75,36 @@ void loop()
     {
         g_lastUpdate = millis();
 
-        g_doc["ledStatus"] = g_ledStatus;
         g_doc["illuminance"] = g_photoresistor.read();
         g_doc["temperature"] = g_thermistor.read();
 
-        /**
-         * @brief Print values.
-         */
+        // Print values.
         //serializeJson(g_doc, Serial);
         //Serial.println();
 
         String output;
-        serializeJson(g_doc, output);
-           
+        serializeJson(g_doc, output);           
         g_ws.textAll(output);
     
         g_ws.cleanupClients();
     }
+}
+
+/**
+ * @brief Toggle the LED and send JSON to clients
+ */
+void changeLed()
+{
+    g_ledStatus = !g_ledStatus;
+    if (g_ledStatus)
+        digitalWrite(Constants::ledPin, HIGH);
+    else
+        digitalWrite(Constants::ledPin, LOW);
+    
+    g_doc["ledStatus"] = g_ledStatus;
+    String output;
+    serializeJson(g_doc, output);           
+    g_ws.textAll(output);
 }
 
 void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len)
