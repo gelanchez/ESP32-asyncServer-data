@@ -1,0 +1,10 @@
+html {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+#title {
+    margin: 0px auto;
+    text-decoration: underline;
+}
+#data { margin: 5px auto;}
+#led { margin-bottom: -20px;}
