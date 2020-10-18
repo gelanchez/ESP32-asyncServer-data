@@ -2,8 +2,8 @@
  * @file index.h
  * @author José Ángel Sánchez (https://github.com/gelanchez)
  * @brief HTML with the main page.
- * @version 0.0.1
- * @date 2020-09-29
+ * @version 0.0.2
+ * @date 2020-10-17
  * @copyright GPL-3.0
  */
 
@@ -11,7 +11,7 @@
 #define INDEX_H
 
 /**
- * @brief Main html page.
+ * @brief main.html, main.js and styles.css in one char array.
  */
 const char MAIN_page[] PROGMEM = R"=====(
 
@@ -21,8 +21,8 @@ const char MAIN_page[] PROGMEM = R"=====(
     <title>ESP32-asyncServer-data</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="José Ángel">
     <meta name="description" content="ESP32 async webserver data sensor">
+    <meta name="author" content="José Ángel Sánchez">
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <style>
         html {
@@ -42,9 +42,10 @@ const char MAIN_page[] PROGMEM = R"=====(
     <p id="data">
         <button id="ledButton" onclick="changeLed()" disabled>Toggle LED</button>
         <canvas id="led" width="50" height="50"></canvas>
-        <span>SENSORS: Temperature: <span id="temperature">0</span>°C. Illuminance: <span id="illuminance">0</span> lx.</span>
+        <span>SENSORS: Temperature: </span><span id="temperature">0</span><span>°C. Illuminance: </span><span
+            id="illuminance">0</span><span>lx.</span>
     </p>
-    
+
     <div class="chart-container" style="position: relative; width:95vw; margin:auto">
         <canvas id="temperatureChart" width="800" height="200" aria-label="Temperature chart" role="img"></canvas>
     </div>
@@ -53,7 +54,9 @@ const char MAIN_page[] PROGMEM = R"=====(
         <canvas id="illuminanceChart" width="800" height="200" aria-label="Illuminance chart" role="img"></canvas>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"
+        integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg=="
+        crossorigin="anonymous"></script>
     <script type="text/javascript">
         var counter = 0;
         var HTMLbutton = document.getElementById("ledButton");
@@ -128,8 +131,8 @@ const char MAIN_page[] PROGMEM = R"=====(
             data: {
                 datasets: [{
                     label: 'Illuminance',
-                    borderColor: 'yellow',
-                    backgroundColor: 'yellow',
+                    borderColor: 'gold',
+                    backgroundColor: 'gold',
                     borderWidth: 2,
                     pointRadius: 1,
                     fill: false

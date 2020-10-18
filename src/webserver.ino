@@ -1,10 +1,10 @@
 /**
  * @file webserver.ino
  * @author José Ángel Sánchez (https://github.com/gelanchez)
- * @brief Main implementation of the async webserver to control a LED and present
- * data from the sensors to the clients using websockets.
- * @version 0.0.1
- * @date 2020-09-29
+ * @brief Main implementation of the async webserver and communications using
+ * websockets to control a LED and present sensors data.
+ * @version 0.1.0
+ * @date 2020-10-17
  * @copyright GPL-3.0
  */
 
@@ -14,7 +14,7 @@
 #include <AsyncTCP.h>
 #include "constants.h"
 #include <ESPAsyncWebServer.h>
-#include "index.h"  // HTML webpage contents with javascripts
+#include "index.h" // HTML webpage contents with javascripts
 #include "mysensors.h"
 #include <WiFi.h>
 
@@ -29,7 +29,7 @@ AsyncWebSocket g_ws("/ws");
 
 static unsigned long g_lastUpdate = millis();
 
-void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len);
+void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
 void changeLed();
 
 void setup()
@@ -54,13 +54,13 @@ void setup()
     /**
      * @brief Server setup.
      */
-    g_server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    g_server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send_P(200, "text/html", MAIN_page);
-        });
-    g_server.on("/hello", HTTP_GET, [](AsyncWebServerRequest *request){
+    });
+    g_server.on("/hello", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send(200, "text/plain", "Hello world");
-        });
-    g_server.onNotFound([](AsyncWebServerRequest *request){
+    });
+    g_server.onNotFound([](AsyncWebServerRequest *request) {
         request->send(404, "text/plain", "Not found");
     });
 
@@ -83,9 +83,8 @@ void loop()
         //Serial.println();
 
         String output;
-        serializeJson(g_doc, output);           
+        serializeJson(g_doc, output);
         g_ws.textAll(output);
-    
         g_ws.cleanupClients();
     }
 }
@@ -100,37 +99,37 @@ void changeLed()
         digitalWrite(Constants::ledPin, HIGH);
     else
         digitalWrite(Constants::ledPin, LOW);
-    
+
     g_doc["ledStatus"] = g_ledStatus;
     String output;
-    serializeJson(g_doc, output);           
+    serializeJson(g_doc, output);
     g_ws.textAll(output);
 }
 
-void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len)
+void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len)
 {
-    if(type == WS_EVT_CONNECT)
+    if (type == WS_EVT_CONNECT)
     {
         Serial.println("Websocket client connection received");
     }
-    else if(type == WS_EVT_DISCONNECT)
+    else if (type == WS_EVT_DISCONNECT)
     {
         Serial.println("Client disconnected");
     }
-    else if(type == WS_EVT_DATA)
+    else if (type == WS_EVT_DATA)
     {
-        if ((char) data[0] == 'C')
+        if ((char)data[0] == 'C')
         {
             changeLed();
         }
         else
         {
             Serial.print("Data received: ");
-            for(int i=0; i < len; i++)
+            for (int i = 0; i < len; i++)
             {
-                Serial.print((char) data[i]);
+                Serial.print((char)data[i]);
             }
             Serial.println();
         }
-    } 
+    }
 }

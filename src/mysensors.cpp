@@ -11,7 +11,7 @@
 #include "constants.h"
 #include "mysensors.h"
 
-Sensor::Sensor(uint8_t pin): m_pin(pin), m_readings{}, m_readIndex(0), m_total(0), m_value(0)
+Sensor::Sensor(uint8_t pin) : m_pin(pin), m_readings{}, m_readIndex(0), m_total(0), m_value(0)
 {
     pinMode(pin, INPUT);
 }
@@ -70,11 +70,11 @@ float Sensor::read()
     m_readIndex = m_readIndex + 1;
 
     if (m_readIndex >= Constants::numReadings)
-        m_readIndex = 0;  // Restart intex array
+        m_readIndex = 0; // Restart intex array
 
     // Calculate the average
     m_value = m_total / Constants::numReadings;
-    return m_value; 
+    return m_value;
 }
 
 float Sensor::getLastValue()
@@ -82,7 +82,7 @@ float Sensor::getLastValue()
     return m_value;
 }
 
-Photoresistor::Photoresistor(uint8_t pin): Sensor(pin)
+Photoresistor::Photoresistor(uint8_t pin) : Sensor(pin)
 {
 }
 
@@ -102,7 +102,7 @@ float Photoresistor::_rawToValue(int rawValue)
 
 float Photoresistor::read()
 {
-    return round(Sensor::read());  // lux values only as integers
+    return round(Sensor::read()); // lux values only as integers
 }
 
 void Photoresistor::printLastValue()
@@ -112,7 +112,7 @@ void Photoresistor::printLastValue()
     Serial.println(" lux");
 }
 
-Thermistor::Thermistor(uint8_t pin): Sensor(pin)
+Thermistor::Thermistor(uint8_t pin) : Sensor(pin)
 {
 }
 
@@ -124,13 +124,13 @@ float Thermistor::_rawToValue(int rawValue)
 {
     float voltage = (static_cast<float>(rawValue) / Constants::resolution) * Constants::maxVoltage;
     float resistance = Constants::resitanceTherm * (static_cast<float>(Constants::maxVoltage) / voltage - 1);
-    float temperature = 1 / (1/298.15 + (1/Constants::parameterB)*log(resistance/Constants::parameterR0)) - 273.15;  // 26000 @ 22 degC
+    float temperature = 1 / (1 / 298.15 + (1 / Constants::parameterB) * log(resistance / Constants::parameterR0)) - 273.15; // 26000 @ 22 degC
     return temperature;
 }
 
 float Thermistor::read()
 {
-    return round(Sensor::read()*10)/10;  // degC values only with one decimal
+    return round(Sensor::read() * 10) / 10; // degC values only with one decimal
 }
 
 void Thermistor::printLastValue()

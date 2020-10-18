@@ -1,9 +1,7 @@
 # ESP32-asyncServer-data
-This repository contains an implementation of an asynchronous HTTP webserver for an ESP32 microcontroller. The ESP32, connected to a WiFi network, is used to control a LED and read and process the values from a thermistor and a photoresistor. The control and values are sent to the clients connected to the webserver using websockets.
+This repository contains an implementation of an asynchronous HTTP webserver for an ESP32 microcontroller. The ESP32, connected to a WiFi network, is used to control a LED as well as read and process the values from a thermistor and a photoresistor.
 
-Apart from the Async server and [websockets](https://en.wikipedia.org/wiki/WebSocket), the following technologies are used:
-- [JSON](https://www.json.org/json-en.html) data format.
-- [charts.js](https://www.chartjs.org/) for data presentation.
+The communication between the clients and the async webserver is done through [websockets](https://en.wikipedia.org/wiki/WebSocket). [JSON](https://www.json.org/json-en.html) is used as data format and [charts.js](https://www.chartjs.org/) for data visualization.
 
 ## Website appearance
 <img src="./ESP32-asyncServer-data_screenshot.png" alt="Website appearance" width="100%" height="auto">
