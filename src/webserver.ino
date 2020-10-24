@@ -39,6 +39,13 @@ void setup()
 
     pinMode(Constants::ledPin, OUTPUT);
 
+    // First sensors reads to initialize values
+    for (int i = 0; i < 5; i++)
+    {
+        g_thermistor.read();
+        g_photoresistor.read();
+    }
+
     /**
      * @brief Connect to WiFi.
      */
