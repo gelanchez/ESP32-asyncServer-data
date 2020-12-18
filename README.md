@@ -40,7 +40,7 @@ External libraries:
     - For the Arduino IDE, change the *src* folder to match the name of the *.ino* file.
 
 ## Contributing
-Pull requests are welcome; if so, please do it to the *develop* branch so it can be merged into *master* after review. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome; if so, please do it to the *develop* branch so they can be merged into *master* after review. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 [GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/)
