@@ -39,5 +39,8 @@ External libraries:
     - For VSCode, modify the *arduino.json* and *c_cpp_properties.json* files to add the missing libraries.
     - For the Arduino IDE, change the *src* folder to match the name of the *.ino* file.
 
+## Contributing
+Pull requests are welcome; if so, please do it to *develop* branch. For major changes, please open an issue first to discuss what you would like to change.
+
 ## License
 [GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/)
